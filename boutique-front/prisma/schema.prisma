@@ -1,0 +1,210 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_DEV_LOCAL")
+}
+
+model Store {
+  ID             String   @id @default(uuid())
+  name           String
+  userID         String
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  categories     Category[]
+  products       Product[]
+  variants       Variant[]
+  variantsLists  VariantList[]
+  variantCombos  VariantCombo[]
+  assets         Asset[]
+  orders         Order[]
+  discussions    Discussion[]
+}
+
+model VariantList {
+  ID        String   @id @default(uuid())
+  name      String
+  storeID   String
+  productID String?
+  isComplex Boolean  @default(false)
+  store     Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  product   Product? @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variants  VariantListToVariant[]
+}
+
+model Variant {
+  ID                   String   @id @default(uuid())
+  type                 String
+  value                String
+  code                 String?
+  storeID              String
+  inceptionDate        DateTime @default(now())
+  lastUpdate           DateTime @updatedAt
+  store                Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  productVariantsLists VariantListToVariant[]
+  variantCombos        VariantComboToVariant[]
+  orderItems           OrderItem[]
+}
+
+model VariantCombo {
+  ID        String   @id @default(uuid())
+  name      String
+  storeID   String
+  productID String
+  quantity  Int
+  store     Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  product   Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variants  VariantComboToVariant[]
+}
+
+model VariantListToVariant {
+  ID            String  @id @default(uuid())
+  variantListID String
+  variantID     String
+  variantsList  VariantList @relation(fields: [variantListID], references: [ID], onDelete: Cascade)
+  variant       Variant     @relation(fields: [variantID], references: [ID], onDelete: Cascade)
+}
+
+model VariantComboToVariant {
+  ID             String  @id @default(uuid())
+  variantComboID String
+  variantID      String
+  variantCombo   VariantCombo @relation(fields: [variantComboID], references: [ID], onDelete: Cascade)
+  variant        Variant      @relation(fields: [variantID], references: [ID], onDelete: Cascade)
+}
+
+model Category {
+  ID            String   @id @default(uuid())
+  name          String
+  storeID       String
+  inceptionDate DateTime @default(now())
+  lastUpdate    DateTime @updatedAt
+  store         Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  productLinks  ProductCategory[]
+}
+
+model Product {
+  ID             String   @id @default(uuid())
+  name           String
+  price          Decimal
+  storeID        String
+  isArchived     Boolean  @default(false)
+  isFeatured     Boolean  @default(false)
+  description    String?
+  imagePreview   String?
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  store          Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  categories     ProductCategory[]
+  variantLists   VariantList[]
+  variantCombos  VariantCombo[]
+  imageURLs      ProductImage[]
+  orderItems     OrderItem[]
+}
+
+model ProductImage {
+  ID        String   @id @default(uuid())
+  imageURL  String
+  productID String?
+  product   Product? @relation(fields: [productID], references: [ID], onDelete: SetNull)
+}
+
+model ProductCategory {
+  productID  String
+  categoryID String
+  product    Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  category   Category @relation(fields: [categoryID], references: [ID], onDelete: Cascade)
+
+  @@id([productID, categoryID])
+}
+
+model Order {
+  ID              String      @id @default(uuid())
+  storeID         String
+  totalPrice      Decimal
+  status          OrderStatus
+  paymentMethod   PaymentMethod
+  shippingAddress String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  store           Store       @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  orderItems      OrderItem[]
+  discussions     Discussion[]
+}
+
+model OrderItem {
+  ID             String   @id @default(uuid())
+  orderID        String
+  productID      String
+  variantID      String?
+  price          Decimal
+  quantity       Int
+  productName    String
+  imagePreview   String?
+  variantSummary String?
+  order          Order    @relation(fields: [orderID], references: [ID], onDelete: Cascade)
+  product        Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variant        Variant? @relation(fields: [variantID], references: [ID], onDelete: SetNull)
+}
+
+model Discussion {
+  ID        String    @id @default(uuid())
+  storeID   String
+  orderID   String?
+  createdAt DateTime  @default(now())
+  store     Store     @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  order     Order?    @relation(fields: [orderID], references: [ID], onDelete: SetNull)
+  messages  Message[]
+}
+
+model Message {
+  ID            String    @id @default(uuid())
+  discussionID  String
+  fromCustomer  Boolean   @default(false)
+  content       String
+  timestamp     DateTime  @default(now())
+  discussion    Discussion @relation(fields: [discussionID], references: [ID], onDelete: Cascade)
+}
+
+model Asset {
+  ID          String   @id @default(uuid())
+  storeID     String
+  store       Store    @relation(fields: [storeID], references: [ID])
+  path        String
+  url         String
+  type        AssetType
+  mimeType    String
+  sizeBytes   Int
+  usedIn      Json?
+  isActive    Boolean  @default(true)
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  STRIPE
+  MANUAL_PAYMENT
+  KLARNA
+  CREDIT_CARD
+  OTHER
+}
+
+enum AssetType {
+  image
+  video
+  audio
+  document
+  other
+}
