@@ -1,0 +1,164 @@
+// ---------------------
+// Connection & Network related models
+// ---------------------
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_DEV_LOCAL") // Database URL Referenced in .env
+}
+
+// ---------------------
+// Store related models
+// ---------------------
+
+model Category {
+  ID            String   @id @default(uuid())
+  name          String
+  storeID       String
+  inceptionDate DateTime @default(now())
+  lastUpdate    DateTime @updatedAt
+  store         Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  productLinks  ProductCategory[]
+}
+
+model Product {
+  ID             String   @id @default(uuid())
+  name           String
+  price          Decimal
+  storeID        String
+  isArchived     Boolean  @default(false)
+  isFeatured     Boolean  @default(false)
+  description    String?
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  store          Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  categories     ProductCategory[]
+  variantLists   VariantList[]
+  variantCombos  VariantCombo[]
+  imageURLs      ProductImage[]
+}
+
+model Store {
+  ID             String   @id @default(uuid())
+  name           String
+  userID         String
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  categories     Category[]
+  products       Product[]
+  variants       Variant[]
+  variantsLists  VariantList[]
+  variantCombos  VariantCombo[]
+  assets         Asset[]
+}
+
+// ---------------------
+// Variant related models
+// ---------------------
+
+model VariantList {
+  ID        String   @id @default(uuid())
+  name      String
+  storeID   String
+  productID String?
+  isComplex Boolean  @default(false) // Indicates if it's a complex list
+  store     Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  product   Product? @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variants  VariantListToVariant[]
+}
+
+model Variant {
+  ID                   String   @id @default(uuid())
+  type                 String   // Color, Size, etc.
+  value                String   // Blue, Medium, etc.
+  code                 String?
+  storeID              String
+  inceptionDate        DateTime @default(now())
+  lastUpdate           DateTime @updatedAt
+  store                Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  productVariantsLists VariantListToVariant[]
+  variantCombos        VariantComboToVariant[]
+}
+
+model VariantCombo {
+  ID        String   @id @default(uuid())
+  name      String
+  storeID   String
+  productID String
+  quantity  Int      // Inventory or quantity available for this variant combo
+  store     Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  product   Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variants  VariantComboToVariant[]
+}
+
+// ---------------------
+// Image Model
+// ---------------------
+
+model ProductImage {
+  ID        String  @id @default(uuid())
+  imageURL  String  // Actual URL of the image
+  productID String?
+  product   Product? @relation(fields: [productID], references: [ID], onDelete: SetNull)
+}
+
+// ---------------------
+// Asset Model
+// ---------------------
+
+model Asset {
+  ID          String   @id @default(uuid())
+  storeID     String
+  store       Store    @relation(fields: [storeID], references: [ID])
+  path        String   // Full storage path (e.g.d store123/products/uuid.png)
+  url         String   // Public or signed URL
+  type        AssetType
+  mimeType    String
+  sizeBytes   Int
+  usedIn      Json?    // Optional, e.g. { "products": ["prod1", "prod2"] }
+  isActive    Boolean  @default(true)
+  uploadedBy  String?  // Optional user ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AssetType {
+  image
+  video
+  audio
+  document
+  other
+}
+
+// ---------------------
+// Association Models (Many-to-Many Links)
+// ---------------------
+
+model ProductCategory {
+  productID  String
+  categoryID String
+  product    Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  category   Category @relation(fields: [categoryID], references: [ID], onDelete: Cascade)
+
+  @@id([productID, categoryID])
+}
+
+model VariantListToVariant {
+  ID            String  @id @default(uuid())
+  variantListID String
+  variantID     String
+  variantsList  VariantList @relation(fields: [variantListID], references: [ID], onDelete: Cascade)
+  variant       Variant     @relation(fields: [variantID], references: [ID], onDelete: Cascade)
+}
+
+model VariantComboToVariant {
+  ID            String  @id @default(uuid())
+  variantComboID String
+  variantID     String
+  variantCombo  VariantCombo @relation(fields: [variantComboID], references: [ID], onDelete: Cascade)
+  variant       Variant      @relation(fields: [variantID], references: [ID], onDelete: Cascade)
+}

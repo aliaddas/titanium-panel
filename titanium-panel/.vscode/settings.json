@@ -1,0 +1,39 @@
+{
+    "files.exclude": {
+        // Build and cache directories
+        "**/.next": false,
+        "**/node_modules": true,
+        "**/dist": false,
+        "**/.cache": false,
+        "**/build": false,
+        "**/out": false,
+
+        // Version control
+        "**/.git": false,
+        "**/.archive": true,
+
+        // Configuration files
+        "**/next.config.*": false,
+        "**/tailwind.config.js*": true,
+        "**/postcss.config.*": false,
+        "**/eslint.config.*": false,
+        "**/next-env.d.ts*": true,
+        "**/components.json*": true,
+
+        // Lock files
+        "**/package-lock.json": true,
+        "**/pnpm-lock.yaml": false,
+        "**/yarn.lock": false,
+
+        // Environment and IDE files
+        "**/.env": false,
+        "**/.env.*": false,
+        "**/.vscode": false,
+        "**/.editorconfig": false,
+        "**/.gitignore": false,
+
+        // Documentation
+        "**/README.md": false
+    },
+    "markdown.preview.lineHeight": 1
+}

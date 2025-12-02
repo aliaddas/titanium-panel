@@ -1,0 +1,30 @@
+{
+  "folders": [
+    {
+      "name": "titanium-panel",
+      "path": "titanium-panel"
+    },
+    {
+      "name": "boutique-front",
+      "path": "boutique-front"
+    },
+    {
+      "name": "ws-server",
+      "path": "ws-server"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "titanium-panel": false,
+      "cannaboutique-front": false
+    },
+    "window.title": "${activeEditorShort}${separator}${rootName}${separator}${profileName}",
+    "git.ignoreLimitWarning": true,
+    "git.autofetch": false,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+  },
+}
