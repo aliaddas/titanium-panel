@@ -1,0 +1,15 @@
+model Store {
+  ID             String   @id @default(uuid())
+  name           String
+  userID         String
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  categories     Category[]
+  products       Product[]
+  variants       Variant[]
+  variantsLists  VariantList[]
+  variantCombos  VariantCombo[]
+  assets         Asset[]
+  orders         Order[]
+  discussions    Discussion[]
+}

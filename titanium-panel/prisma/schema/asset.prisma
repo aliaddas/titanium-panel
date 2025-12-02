@@ -1,0 +1,23 @@
+model Asset {
+  ID          String   @id @default(uuid())
+  storeID     String
+  store       Store    @relation(fields: [storeID], references: [ID])
+  path        String   // Full storage path (e.g.d store123/products/uuid.png)
+  url         String   // Public or signed URL
+  type        AssetType
+  mimeType    String
+  sizeBytes   Int
+  usedIn      Json?    // Optional, e.g. { "products": ["prod1", "prod2"] }
+  isActive    Boolean  @default(true)
+  uploadedBy  String?  // Optional user ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AssetType {
+  image
+  video
+  audio
+  document
+  other
+}

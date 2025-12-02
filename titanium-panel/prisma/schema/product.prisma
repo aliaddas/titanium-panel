@@ -1,0 +1,44 @@
+model Category {
+  ID            String   @id @default(uuid())
+  name          String
+  storeID       String
+  inceptionDate DateTime @default(now())
+  lastUpdate    DateTime @updatedAt
+  store         Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  productLinks  ProductCategory[]
+}
+
+model Product {
+  ID             String   @id @default(uuid())
+  name           String
+  price          Decimal
+  storeID        String
+  isArchived     Boolean  @default(false)
+  isFeatured     Boolean  @default(false)
+  description    String?
+  imagePreview   String?
+  inceptionDate  DateTime @default(now())
+  lastUpdate     DateTime @updatedAt
+  store          Store    @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  categories     ProductCategory[]
+  variantLists   VariantList[]
+  variantCombos  VariantCombo[]
+  imageURLs      ProductImage[]
+  orderItems     OrderItem[]
+}
+
+model ProductImage {
+  ID        String   @id @default(uuid())
+  imageURL  String
+  productID String?
+  product   Product? @relation(fields: [productID], references: [ID], onDelete: SetNull)
+}
+
+model ProductCategory {
+  productID  String
+  categoryID String
+  product    Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  category   Category @relation(fields: [categoryID], references: [ID], onDelete: Cascade)
+
+  @@id([productID, categoryID])
+}

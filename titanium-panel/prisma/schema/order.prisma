@@ -1,0 +1,46 @@
+// models/order.prisma
+
+model Order {
+  ID              String      @id @default(uuid())
+  storeID         String
+  totalPrice      Decimal
+  status          OrderStatus
+  paymentMethod   PaymentMethod
+  shippingAddress String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  store           Store       @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  orderItems      OrderItem[]
+  discussions     Discussion[]
+}
+
+model OrderItem {
+  ID             String   @id @default(uuid())
+  orderID        String
+  productID      String
+  variantID      String?
+  price          Decimal
+  quantity       Int
+  productName    String
+  imagePreview   String?
+  variantSummary String?
+  order          Order    @relation(fields: [orderID], references: [ID], onDelete: Cascade)
+  product        Product  @relation(fields: [productID], references: [ID], onDelete: Cascade)
+  variant        Variant? @relation(fields: [variantID], references: [ID], onDelete: SetNull)
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  STRIPE
+  MANUAL_PAYMENT
+  KLARNA
+  CREDIT_CARD
+  OTHER
+}

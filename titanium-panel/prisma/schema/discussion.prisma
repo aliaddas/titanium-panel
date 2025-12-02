@@ -1,0 +1,20 @@
+// models/discussion.prisma
+
+model Discussion {
+  ID        String    @id @default(uuid())
+  storeID   String
+  orderID   String?
+  createdAt DateTime  @default(now())
+  store     Store     @relation(fields: [storeID], references: [ID], onDelete: Cascade)
+  order     Order?    @relation(fields: [orderID], references: [ID], onDelete: SetNull)
+  messages  Message[]
+}
+
+model Message {
+  ID            String    @id @default(uuid())
+  discussionID  String
+  fromCustomer  Boolean   @default(false)
+  content       String
+  timestamp     DateTime  @default(now())
+  discussion    Discussion @relation(fields: [discussionID], references: [ID], onDelete: Cascade)
+}
