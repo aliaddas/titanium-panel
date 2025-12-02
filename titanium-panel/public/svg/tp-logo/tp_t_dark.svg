@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="70.5626 95.8248 42.0717 44.4777" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="cc185aa2-3ce7-4be9-baba-10a181fb33cb" filterUnits="userSpaceOnUse">
+      <feColorMatrix type="matrix" values="0 0 0 0 0.99609375  0 0 0 0 0.99609375  0 0 0 0 0.99609375  0 0 0 1 0"/>
+    </filter>
+    <linearGradient x1="0" y1="1" x2="0" y2="0" id="yMJrjPHVcKUsYbSdQXukr">
+      <stop offset="0" stop-color="#ff9a9e"/>
+      <stop offset="1" stop-color="#feceef"/>
+    </linearGradient>
+  </defs>
+  <mask v-gra="im" id="cbbab086-ff53-4557-885c-ec16dbfc9862">
+    <g fill="#FFFFFF" filter="url(#cc185aa2-3ce7-4be9-baba-10a181fb33cb)">
+      <g class="imagesvg" fill="#FFFFFF">
+        <g fill="#FFFFFF">
+          <rect fill="#FFFFFF" fill-opacity="0" stroke-width="2px" x="0" y="0" width="30.071746410741415" height="32.477693980842204" class="image-rect"/>
+          <svg x="0" y="0" width="30.071746410741415" height="32.477693980842204" filtersec="colorsb2118616866" class="image-svg-svg primary" style="overflow: visible;" fill="#FFFFFF">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.369998931884766 49" fill="#FFFFFF">
+              <title>t18</title>
+              <g data-name="图层 2" fill="#FFFFFF">
+                <path d="M45.37 16.42h-7.78V8H27v33.33L22.68 49l-4.32-7.63V8H7.78v8.42H0V0h45.37z" fill="#9E005D" data-name="Layer 1"/>
+              </g>
+            </svg>
+          </svg>
+        </g>
+      </g>
+    </g>
+  </mask>
+  <g transform="matrix(1, 0, 0, 1, 76.56259155273439, 101.82480987068263)" fill="#FFFFFF">
+    <g fill="#FFFFFF" mask="url(#cbbab086-ff53-4557-885c-ec16dbfc9862)">
+      <g class="imagesvg" fill="#FFFFFF">
+        <g fill="#FFFFFF">
+          <rect fill="#FFFFFF" fill-opacity="0" stroke-width="2px" x="0" y="0" width="30.071746410741415" height="32.477693980842204" class="image-rect"/>
+          <svg x="0" y="0" width="30.071746410741415" height="32.477693980842204" filtersec="colorsb2118616866" class="image-svg-svg primary" style="overflow: visible;" fill="#FFFFFF">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.369998931884766 49" fill="#FFFFFF">
+              <title>t18</title>
+              <g data-name="图层 2" fill="#FFFFFF">
+                <path d="M45.37 16.42h-7.78V8H27v33.33L22.68 49l-4.32-7.63V8H7.78v8.42H0V0h45.37z" fill="#9E005D" data-name="Layer 1"/>
+              </g>
+            </svg>
+          </svg>
+        </g>
+      </g>
+      <rect v-gra="id" width="42.071746826171875" height="44.47769546508789" transform="translate(-6, -6)" style="pointer-events:none;" fill="url(&quot;#yMJrjPHVcKUsYbSdQXukr&quot;)"/>
+    </g>
+  </g>
+</svg>
